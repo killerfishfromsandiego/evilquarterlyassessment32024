@@ -60,9 +60,18 @@ def remove_question_interface(course, frame, question_display):
 
     scrollbar.config(command=question_text_area.yview)
 
-    # Display all questions
-    question_list = "\n".join([f"ID: {q[0]} - {q[1]} (Answer: {q[2]})" for q in questions])
-    question_text_area.insert("1.0", question_list)
+    # Function to refresh the question list
+    def refresh_question_list():
+        # Fetch updated questions from the database
+        questions = fetch_questions(course)
+        # Generate the string representation of questions to display
+        question_list = "\n".join([f"ID: {q[0]} - {q[1]} (Answer: {q[2]})" for q in questions])
+        # Clear the Text widget and insert the updated question list
+        question_text_area.delete(1.0, "end")
+        question_text_area.insert("1.0", question_list)
+
+    # Display all questions initially
+    refresh_question_list()
 
     # Ask for question ID to remove
     def on_remove_question():
@@ -75,7 +84,7 @@ def remove_question_interface(course, frame, question_display):
             if question_exists:
                 remove_question(course, question_to_remove)
                 messagebox.showinfo("Success", "Question removed successfully.")
-                top.destroy()  # Close the Toplevel window after successful removal
+                refresh_question_list()  # Refresh the list after removal
             else:
                 messagebox.showerror("Invalid ID", "The selected question ID does not exist.")
         except ValueError:
@@ -141,7 +150,7 @@ def show_course_selection(frame):
         widget.destroy()
 
     # Create dropdown for course selection
-    course_options = ["Geography", "Movies", "Science", "Music", "Sports"]
+    course_options = ["ECON2020", "DS3850", "ECON3610", "DS3860", "ACCT2120"]
     selected_course = StringVar()
     selected_course.set(course_options[0])  # Default to the first course
 
