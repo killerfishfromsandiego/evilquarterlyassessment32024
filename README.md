@@ -1,6 +1,6 @@
 Hello! This is a quiz program that is implemented using python and GUIs. There really isn't much to it, but I'll tell you what is used for what. 
 
-README
+README:
 YOU'RE READING IT RIGHT NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
 questionmodifier.py:
