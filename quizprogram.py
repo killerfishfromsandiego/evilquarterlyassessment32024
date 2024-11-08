@@ -103,26 +103,26 @@ class QuizApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Quiz Bowl")
-        self.root.geometry("600x400")  # Set a larger window size
+        self.root.geometry("600x400")  
         self.create_first_window()
 
     def create_first_window(self):
-        # This frame will contain the labels for each course, styled like a bullet-point list
+        # this frame contains the courses in a bullet point format
         self.first_frame = tk.Frame(self.root)
         self.first_frame.pack(pady=20)
 
         self.label = tk.Label(self.first_frame, text="Select a Course:", font=("Arial", 16))
         self.label.pack(pady=10)
 
-        self.course_labels = []  # List to keep track of the course labels
+        self.course_labels = []  # list that contains the courses
         self.course_options = ["Geography", "Movies", "Science", "Music", "Sports"]
         
-        # Create a label for each course, styled like a bullet-point list
+        #creates labels in a bullet point format
         for course in self.course_options:
             label = tk.Label(self.first_frame, text=f"• {course}", font=("Arial", 14), cursor="hand2",
                              bg="lightgray", padx=10, pady=5, anchor="w")
             label.pack(fill="x", pady=5)
-            label.bind("<Button-1>", lambda event, course=course: self.start_quiz(course))  # Bind click event to start quiz
+            label.bind("<Button-1>", lambda event, course=course: self.start_quiz(course))  #makes it so when you click the button it starts the quiz
             self.course_labels.append(label)
 
     def start_quiz(self, course):
@@ -137,7 +137,7 @@ class QuizApp:
         # Create a new window for the quiz
         quiz_window = tk.Toplevel(self.root)
         quiz_window.title(f"{course} Quiz")
-        quiz_window.geometry("800x600")  # Larger window for quiz
+        quiz_window.geometry("800x600") 
 
         self.questions = fetch_questions(course)
         self.current_question_index = 0
@@ -175,7 +175,7 @@ class QuizApp:
                 self.score += 1
 
             # Provide feedback for the current question
-            feedback = "Correct!" if user_answer == current_question.correct_answer else f"Incorrect! The correct answer was: {current_question.correct_answer.capitalize()}"
+            feedback = "Correct!" if user_answer == current_question.correct_answer else f"WRONG!! HERES THE ANSWER: {current_question.correct_answer}"
             messagebox.showinfo("Answer Feedback", feedback)
 
             # Move to the next question
