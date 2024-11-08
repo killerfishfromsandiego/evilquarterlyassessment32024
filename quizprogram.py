@@ -39,30 +39,38 @@ class QuizApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Quiz Bowl")
-        self.root.geometry("600x400")  
+        self.root.geometry("600x400")
+        self.root.configure(bg="darkred")  # Deep red background for the root window
         self.create_first_window()
 
     def create_first_window(self):
-        # this frame contains the courses in a bullet point format
-        self.first_frame = tk.Frame(self.root)
-        self.first_frame.pack(pady=20)
+        # Frame for course selection
+        self.first_frame = tk.Frame(self.root, bg="darkred")
+        self.first_frame.pack(pady=20, expand=True, fill="both")
 
-        self.label = tk.Label(self.first_frame, text="Select a Course:", font=("Arial", 16))
+        self.label = tk.Label(self.first_frame, text="SELECT A COURSE...", font=("Arial", 16), bg="darkred", fg="white")
         self.label.pack(pady=10)
 
         self.course_labels = []  # list that contains the courses
         self.course_options = ["ECON2020", "DS3850", "ECON3610", "DS3860", "ACCT2120"]
-        
-        #creates labels in a bullet point format
+        self.course_colors = {
+            "ECON2020": "green",
+            "DS3850": "gray",
+            "ECON3610": "brown",   # Changed ECON3610 to brown
+            "DS3860": "purple",
+            "ACCT2120": "cyan"     # Changed ACCT2120 to cyan
+        }
+
+        # Create labels with the specified course colors
         for course in self.course_options:
             label = tk.Label(self.first_frame, text=f"• {course}", font=("Arial", 14), cursor="hand2",
-                             bg="lightgray", padx=10, pady=5, anchor="w")
+                             bg=self.course_colors[course], fg="white", padx=10, pady=5, anchor="w")
             label.pack(fill="x", pady=5)
-            label.bind("<Button-1>", lambda event, course=course: self.start_quiz(course))  #makes it so when you click the button it starts the quiz
+            label.bind("<Button-1>", lambda event, course=course: self.start_quiz(course))  # Makes it so when you click the label it starts the quiz
             self.course_labels.append(label)
 
     def start_quiz(self, course):
-        # Destroy the first window (course selection) and root window
+        # Destroy the first window (course selection) and hide the root window
         self.first_frame.destroy()
         self.root.withdraw()  # Hide the root window
 
@@ -73,14 +81,15 @@ class QuizApp:
         # Create a new window for the quiz
         quiz_window = tk.Toplevel(self.root)
         quiz_window.title(f"{course} Quiz")
-        quiz_window.geometry("800x600") 
+        quiz_window.geometry("800x600")
+        quiz_window.configure(bg="darkred")  # Deep red background for the quiz window
 
         self.questions = fetch_questions(course)
         self.current_question_index = 0
         self.score = 0
 
         # Set up the question display area
-        self.question_label = tk.Label(quiz_window, text="", font=("Arial", 16), wraplength=750, justify="left")
+        self.question_label = tk.Label(quiz_window, text="", font=("Arial", 16), wraplength=750, justify="left", bg="darkred", fg="white")
         self.question_label.pack(pady=20)
 
         # Set up the answer entry area
@@ -88,7 +97,7 @@ class QuizApp:
         self.answer_entry.pack(pady=10)
 
         # Submit button to check the answer
-        self.submit_button = tk.Button(quiz_window, text="Submit Answer", command=lambda: self.submit_answer(quiz_window), font=("Arial", 14))
+        self.submit_button = tk.Button(quiz_window, text="SUBMIT", command=lambda: self.submit_answer(quiz_window), font=("Arial", 14))
         self.submit_button.pack(pady=10)
 
         self.display_question()
@@ -111,24 +120,24 @@ class QuizApp:
                 self.score += 1
 
             # Provide feedback for the current question
-            feedback = "Correct!" if user_answer == current_question.correct_answer else f"WRONG!! HERES THE ANSWER: {current_question.correct_answer}"
-            messagebox.showinfo("Answer Feedback", feedback)
+            feedback = "CORRECT!!!" if user_answer == current_question.correct_answer else f"WRONG!! HERES THE ANSWER: {current_question.correct_answer}"
+            messagebox.showinfo("ANSWER JUDGEMENT", feedback)
 
             # Move to the next question
             self.current_question_index += 1
             self.display_question()
         else:
-            messagebox.showwarning("Warning", "Please enter an answer.")
+            messagebox.showwarning("FOOL!", "YOU MUST ENTER AN ANSWER TO CONTINUE.")
 
     def end_quiz(self):
         total_questions = len(self.questions)
         if total_questions > 0:
             score_percentage = (self.score / total_questions) * 100
-            result_text = f"Quiz Complete! Your score: {self.score}/{total_questions} ({score_percentage:.2f}%)"
+            result_text = f"YOU SURVIVED! HERE IS YOUR SCORE: {self.score}/{total_questions} ({score_percentage:.2f}%)"
         else:
-            result_text = "No questions available for this quiz."
+            result_text = "YOU OAF!!! THERE ARE NO QUESTIONS LOADED..."
 
-        messagebox.showinfo("Quiz Complete", result_text)
+        messagebox.showinfo("YOU DID IT!", result_text)
         self.quit_program()
 
     def quit_program(self):
